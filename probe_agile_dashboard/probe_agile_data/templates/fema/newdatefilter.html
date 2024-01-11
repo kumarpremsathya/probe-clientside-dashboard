@@ -1,0 +1,211 @@
+{% load static %}
+
+<!Doctype HTML>
+	<html>
+	<head>
+		<title></title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+		{% comment %} <link rel="stylesheet" href="css/style.css" type="text/css"/> {% endcomment %}
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script type="text/javascript" src="{% static 'js/script.js' %}"></script>
+       
+	</head>
+
+
+	<body>
+		
+	<div id="mySidenav" class="sidenav">
+        <div class="Home" >
+            {% comment %} <img src="{% static 'image/home.png' %}"class="home-img"> {% endcomment %}
+             {% comment %} <a href="{% url '#' %}"><i class="fa fa-home aria-hidden="true"></i> HOME</a> {% endcomment %}
+             <P><a class="links" href="{% url 'newhome' %}">   Probe Agile Data</a></p>
+            {% comment %} <span><a class="links" href="{% url '#' %}"> Market Data  </a></span> {% endcomment %}
+       </div>
+        <p class="Datas">Data Sources</p><hr>
+        <a href="{% url 'newfema_datefilter' %}" class="icon-a"><i class="fa fa-list icons"></i> Fema</a>
+        <a href="{% url 'newstartup_datefilter' %}" class="icon-a"><i class="fa fa-list icons"></i>   Startup_india</a>
+        <a href="#"class="icon-a"><i class="fa fa-list icons"></i> RBI_odi</a>
+        <a href="#"class="icon-a"><i class="fa fa-list icons"></i> RBI_ecb</a>
+        
+
+	</div>
+	<div id="main">
+
+		<div class="head">
+			<div class="col-div-6">
+	            <span > Data Extraction Status for Probe Agile Data Sources</span>
+	        </div>
+		
+
+		<div class="clearfix"></div>
+	</div>
+
+		<div class="clearfix"></div>
+		<br/>
+		
+		
+		<div class="col-div-3">
+			<div class="box">
+                <P class="align">{{ table_name_filter }}</P>
+            <div style="text-align:center;" class="drop-down">
+				{% comment %} <P style="font-size:20px"> Start Date :&nbsp;"{{ min_date }}" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End Date :&nbsp; "{{ max_date }}" </p> {% endcomment %}
+                    <p>
+                        {% if start_date and end_date %}
+                            Start Date: {{ start_date }} | End Date: {{ end_date }}
+                        {% elif past_15_days %}
+                            Start Date: {{ past_15_days.0 }} | End Date: {{ past_15_days.1 }}
+                        {% elif last_month %}
+                            Start Date: {{ last_month.0 }} | End Date: {{ last_month.1 }}
+                        {% endif %}
+                    </p>
+                
+
+          
+                   
+                    <!-- Custom date range filter -->
+                        <form method="get">
+                            {{ form.date_range }}
+                            <div id="custom-date-fields" style="display:none;">
+                                {{ form.start_date }}
+                                {{ form.end_date }}
+                            </div>
+                            <button type="submit" onclick="return validateCustomDateRange()">Apply</button>
+                        </form>
+                        <div id="error-message"></div> 
+                    </div> 
+                    
+                </div>
+			</div>
+           
+		</div>
+	
+	
+		<div class="clearfix"></div>
+		<br/><br/>
+		<div class="col-div-8" style="width:1585px; left:316px;">
+			<div class="box-8" style="height:570px;">
+			<div class="content-box">
+				{% comment %} <p>Historic Results for {{ table_name_filter }}</p> {% endcomment %}
+				<br/>
+				<table id="city-table" class="custom-table">
+                  
+                    <tr>
+                   
+                        <th>Status</th>
+                        <th>#Records Scraped</th>
+                        <th>Failure Reason</th>
+                        <th>Scraped On</th>
+                    </tr>
+              
+                    <!-- Loop through your data and display rows -->
+                    {% for item in data %}
+                        <tr>
+                        
+                            <td style="color:{{ item.status_color }}">{{ item.status }}</td>
+                            <td style="color:{{ item.status_color }}">{{ item.data_scraped }}</td>
+                            <td style="color:{{ item.status_color }}">{{ item.reason }}</td>
+                            <td>{{ item.scraped_at}}</td>
+            
+                        </tr>
+                    {% endfor %}
+               
+            </table>
+		</div>
+		</div>
+		</div>
+
+		<div class="clearfix"></div>
+	</div>
+    <div class="col-div-4">
+		<div class="box" style="text-align:center;">
+		
+            <p style="color: #f7403b;">Contact us for support : <a href="agiledatahelp@gmail.com"
+                style="color: #f7403b;"> agiledatahelp@gmail.com</a></p>		
+		</div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script>
+
+	  $(".nav").click(function(){
+	    $("#mySidenav").css('width','70px');
+	    $("#main").css('margin-left','70px');
+	    $(".logo").css('visibility', 'hidden');
+	    $(".logo span").css('visibility', 'visible');
+	     $(".logo span").css('margin-left', '-10px');
+	     $(".icon-a").css('visibility', 'hidden');
+	     $(".icons").css('visibility', 'visible');
+	     $(".icons").css('margin-left', '-8px');
+	      $(".nav").css('display','none');
+	      $(".nav2").css('display','block');
+	  });
+
+	$(".nav2").click(function(){
+	    $("#mySidenav").css('width','300px');
+	    $("#main").css('margin-left','300px');
+	    $(".logo").css('visibility', 'visible');
+	     $(".icon-a").css('visibility', 'visible');
+	     $(".icons").css('visibility', 'visible');
+	     $(".nav").css('display','block');
+	      $(".nav2").css('display','none');
+	 });
+     document.addEventListener('DOMContentLoaded', function () {
+        var customDateFields = document.getElementById('custom-date-fields');
+        var dateRangeDropdown = document.getElementsByName('date_range')[0];
+        var errorMessage = document.getElementById('error-message');
+
+        // Initial check to show/hide custom date fields
+        toggleCustomDateFields();
+
+        // Add event listener to the date range dropdown
+        dateRangeDropdown.addEventListener('change', toggleCustomDateFields);
+
+        function toggleCustomDateFields() {
+            if (dateRangeDropdown.value === 'custom') {
+                customDateFields.style.display = 'block';
+                // Hide the table for the custom option until validated
+                document.getElementById('city-table').style.display = 'table';
+            } else {
+                customDateFields.style.display = 'none';
+                // Show the table for other options
+                document.getElementById('city-table').style.display = 'table';
+            }
+        }
+
+        // Function to validate custom date range before submitting
+        window.validateCustomDateRange = function() {
+            if (dateRangeDropdown.value === 'custom') {
+                var startDate = new Date(document.getElementsByName('start_date')[0].value);
+                var endDate = new Date(document.getElementsByName('end_date')[0].value);
+                
+                
+                // Check if both start date and end date are selected
+                if (!startDate || !endDate) {
+                    alert('Please select both start date and end date.');
+                    return false;
+                }
+
+                // Check if the date range exceeds 60 days
+                var sixtyDaysLater = new Date(startDate.getTime() + 60 * 24 * 60 * 60 * 1000);
+                if (endDate > sixtyDaysLater) {
+                    errorMessage.textContent = 'Date range for custom view cannot exceed 60 days.';
+                    return false;
+                }
+
+                // Hide the error message and display the table
+                errorMessage.textContent = '';
+                document.getElementById('city-table').style.display = 'table'; 
+            }
+
+            return true;
+        };
+    });
+      
+</script>
+
+</body>
+
+</html>
+
+

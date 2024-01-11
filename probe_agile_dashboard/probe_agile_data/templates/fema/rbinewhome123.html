@@ -1,0 +1,46 @@
+<!-- fema/templates/fema/newhome.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RBI Log Data</title>
+    <style>
+        .green { color: green; }
+        .orange { color: orange; }
+        .red { color: red; }
+        .black { color: black; }
+    </style>
+</head>
+<body>
+
+    <h1>RBI Log Data</h1>
+
+    <table style="width:100%;" border="1">
+        <thead>
+            <tr>
+                <th>Data Source</th>
+                {% for row in data_list %}
+                    <th>{{ row.Date }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="#" onclick="openPopup('rbi_fema');">RBI FEMA</a></td>
+                {% for row in data_list %}
+                    <td class="{{ row.FEMA_Color }}">{{ row.FEMA_Data_Available }}</td>
+                    <td class="{{ row.FEMA_Color }}">{{ row.FEMA_Data_Scraped }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td><a href="#" onclick="openPopup('rbi_ecb');">RBI ECB</a></td>
+                {% for row in data_list %}
+                    <td class="{{ row.ECB_Color }}">{{ row.ECB_Data_Available }}</td>
+                    <td class="{{ row.ECB_Color }}">{{ row.ECB_Data_Scraped }}</td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
